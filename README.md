@@ -8,6 +8,7 @@ Migrate your database using Flyway (http://flywaydb.org)
 * `database` (required) The migration database.
 * `username` (required) The username to connect to the MySQL database.
 * `password` (required) The password to connect to the MySQL database.
+* `driver` (required) The password to connect to the MySQL database.
 * `migration-dir` (required) The directory containing the migrations.
 
 # License
