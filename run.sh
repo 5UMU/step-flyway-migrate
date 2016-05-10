@@ -30,7 +30,7 @@ main() {
   fi
   
   if [ ! -n "$WERCKER_FLYWAY_MIGRATE_MIGRATION_PREFIX" ]; then
-    fail 'missing or empty option migration-prefix, please check wercker.yml'
+    WERCKER_FLYWAY_MIGRATE_MIGRATION_PREFIX="V"
   fi
 
   info 'updating apt-get'
