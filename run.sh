@@ -2,7 +2,7 @@
 
 main() {
   info 'initialize'
-  export FLYWAY_VERSION="3.2.1"
+  export FLYWAY_VERSION="4.0.1"
   echo "configuring version $FLYWAY_VERSION of Flyway"
 
   if [ ! -n "$WERCKER_FLYWAY_MIGRATE_HOST" ]; then
@@ -20,6 +20,10 @@ main() {
   if [ ! -n "$WERCKER_FLYWAY_MIGRATE_DATABASE" ]; then
     fail 'missing or empty option database, please check wercker.yml'
   fi
+  
+    if [ ! -n "$WERCKER_FLYWAY_MIGRATE_DRIVER" ]; then
+    fail 'missing or empty option driver, please check wercker.yml'
+  fi
 
   if [ ! -n "$WERCKER_FLYWAY_MIGRATE_MIGRATION_DIR" ]; then
     fail 'missing or empty option migration-dir, please check wercker.yml'
@@ -32,7 +36,7 @@ main() {
   sudo apt-get install curl -y
 
   info 'downloading flyway'
-  curl -L https://bintray.com/artifact/download/business/maven/flyway-commandline-3.2.1-linux-x64.tar.gz > /tmp/flyway.tar.gz
+  curl -L https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.0.1/flyway-commandline-4.0.1-linux-x64.tar.gz > /tmp/flyway.tar.gz
   mkdir /tmp/flyway
   tar -zxvf /tmp/flyway.tar.gz -C /tmp/flyway
   mkdir "$WERCKER_STEP_ROOT/flyway"
@@ -48,7 +52,7 @@ main() {
   fi
 
   set +e
-  local MIGRATE="$WERCKER_STEP_ROOT/flyway/flyway migrate -url=jdbc:mysql://$WERCKER_FLYWAY_MIGRATE_HOST/$WERCKER_FLYWAY_MIGRATE_DATABASE -user=$WERCKER_FLYWAY_MIGRATE_USERNAME -password=$WERCKER_FLYWAY_MIGRATE_PASSWORD -locations=filesystem:$WERCKER_ROOT/$WERCKER_FLYWAY_MIGRATE_MIGRATION_DIR"
+  local MIGRATE="$WERCKER_STEP_ROOT/flyway/flyway migrate -url=jdbc:$WERCKER_FLYWAY_MIGRATE_DRIVER://$WERCKER_FLYWAY_MIGRATE_HOST/$WERCKER_FLYWAY_MIGRATE_DATABASE -user=$WERCKER_FLYWAY_MIGRATE_USERNAME -password=$WERCKER_FLYWAY_MIGRATE_PASSWORD -locations=filesystem:$WERCKER_ROOT/$WERCKER_FLYWAY_MIGRATE_MIGRATION_DIR"
   info 'migrating'
   eval "$MIGRATE"
 
