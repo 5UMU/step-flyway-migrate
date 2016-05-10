@@ -21,12 +21,16 @@ main() {
     fail 'missing or empty option database, please check wercker.yml'
   fi
   
-    if [ ! -n "$WERCKER_FLYWAY_MIGRATE_DRIVER" ]; then
+  if [ ! -n "$WERCKER_FLYWAY_MIGRATE_DRIVER" ]; then
     fail 'missing or empty option driver, please check wercker.yml'
   fi
 
   if [ ! -n "$WERCKER_FLYWAY_MIGRATE_MIGRATION_DIR" ]; then
     fail 'missing or empty option migration-dir, please check wercker.yml'
+  fi
+  
+  if [ ! -n "$WERCKER_FLYWAY_MIGRATE_MIGRATION_PREFIX" ]; then
+    fail 'missing or empty option migration-prefix, please check wercker.yml'
   fi
 
   info 'updating apt-get'
@@ -52,7 +56,7 @@ main() {
   fi
 
   set +e
-  local MIGRATE="$WERCKER_STEP_ROOT/flyway/flyway migrate -url=jdbc:$WERCKER_FLYWAY_MIGRATE_DRIVER://$WERCKER_FLYWAY_MIGRATE_HOST/$WERCKER_FLYWAY_MIGRATE_DATABASE -user=$WERCKER_FLYWAY_MIGRATE_USERNAME -password=$WERCKER_FLYWAY_MIGRATE_PASSWORD -locations=filesystem:$WERCKER_ROOT/$WERCKER_FLYWAY_MIGRATE_MIGRATION_DIR"
+  local MIGRATE="$WERCKER_STEP_ROOT/flyway/flyway migrate -url=jdbc:$WERCKER_FLYWAY_MIGRATE_DRIVER://$WERCKER_FLYWAY_MIGRATE_HOST/$WERCKER_FLYWAY_MIGRATE_DATABASE -user=$WERCKER_FLYWAY_MIGRATE_USERNAME -password=$WERCKER_FLYWAY_MIGRATE_PASSWORD -locations=filesystem:$WERCKER_ROOT/$WERCKER_FLYWAY_MIGRATE_MIGRATION_DIR -sqlMigrationPrefix=$WERCKER_FLYWAY_MIGRATE_MIGRATION_PREFIX"
   info 'migrating'
   eval "$MIGRATE"
 
